@@ -42,6 +42,15 @@ provider:
       Resource: "arn:aws:dynamodb:ap-northeast-2:*:*"
 
 functions:
+  get:
+    handler: get.main
+    events:
+      - http:
+          path: entries/{id}
+          method: get
+          cors: true
+          authorizer:
+            arn: arn:aws:cognito-idp:ap-northeast-2:482938944976:userpool/ap-northeast-2_019NPzAZP
   create:
     handler: create.main
     events:
