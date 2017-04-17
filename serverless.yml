@@ -1,27 +1,16 @@
-# Welcome to Serverless!
-#
-# This file is the main config file for your service.
-# It's very minimal at this point and uses default values.
-# You can always add more config options for more control.
-# We've included some commented out config examples here.
-# Just uncomment any of them to get that config option.
-#
-# For full config options, check the docs:
-#    docs.serverless.com
-#
-# Happy Coding!
+package:
+  exclude:
+    - secrets.yml
 
 service: blog-api # NOTE: update this with your service name
-
-# You can pin your service to only deploy with a specific Serverless version
-# Check out our docs for more details
-# frameworkVersion: "=X.X.X"
 
 plugins:
   - serverless-webpack
 
 custom:
   webpackIncludeModules: true
+  stage: ${opt:stage, self:provider.stage}
+  secrets: ${file(secrets.yml):${self:custom.stage}}
 
 provider:
   name: aws
@@ -42,6 +31,15 @@ provider:
       Resource: "arn:aws:dynamodb:ap-northeast-2:*:*"
 
 functions:
+  list:
+    handler: list.main
+    events:
+      - http:
+          path: entries
+          method: get
+          cors: true
+          authorizer:
+            arn: "${self:custom.secrets.COMMON_USER_POOL_ARN}"
   get:
     handler: get.main
     events:
@@ -50,7 +48,7 @@ functions:
           method: get
           cors: true
           authorizer:
-            arn: arn:aws:cognito-idp:ap-northeast-2:482938944976:userpool/ap-northeast-2_019NPzAZP
+            arn: "${self:custom.secrets.COMMON_USER_POOL_ARN}"
   create:
     handler: create.main
     events:
@@ -59,5 +57,5 @@ functions:
           method: post
           cors: true
           authorizer:
-            arn: arn:aws:cognito-idp:ap-northeast-2:482938944976:userpool/ap-northeast-2_019NPzAZP
+            arn: "${self:custom.secrets.COMMON_USER_POOL_ARN}"
 
