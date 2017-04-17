@@ -15,7 +15,7 @@ custom:
 provider:
   name: aws
   runtime: nodejs6.10
-  stage: dev
+  stage: prod
   region: ap-northeast-2
 
   iamRoleStatements:
@@ -31,6 +31,24 @@ provider:
       Resource: "arn:aws:dynamodb:ap-northeast-2:*:*"
 
 functions:
+  delete:
+    handler: delete.main
+    events:
+      - http:
+          path: entries/{id}
+          method: delete
+          cors: true
+          authorizer:
+            arn: "${self:custom.secrets.COMMON_USER_POOL_ARN}"
+  update:
+    handler: update.main
+    events:
+      - http:
+          path: entries/{id}
+          method: put
+          cors: true
+          authorizer:
+            arn: "${self:custom.secrets.COMMON_USER_POOL_ARN}"
   list:
     handler: list.main
     events:
