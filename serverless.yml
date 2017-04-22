@@ -1,11 +1,8 @@
-package:
-  exclude:
-    - secrets.yml
-
 service: blog-api # NOTE: update this with your service name
 
 plugins:
   - serverless-webpack
+  - serverless-mocha-plugin
 
 custom:
   webpackIncludeModules: true
