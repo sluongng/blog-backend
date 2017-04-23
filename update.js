@@ -18,8 +18,8 @@ export async function main(event, context, callback) {
 
     UpdateExpression: 'SET content = :content, attachment = :attachment',
     ExpressionAttributeValues: {
-      ':content': data.attachment ? data.attachment : null,
-      ':attachment': data.content ? data.content : null,
+      ':content': data.content ? data.content : null,
+      ':attachment': data.attachment ? data.attachment : null,
     },
     ReturnValues: 'ALL_NEW',
   };
